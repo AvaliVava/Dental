@@ -1,0 +1,44 @@
+name: Dentwise CI Pipeline
+
+on:
+  push:
+    branches: [ "master" ]
+  pull_request:
+    branches: [ "master" ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+
+      - name: Install Dependencies
+        run: npm ci
+
+      - name: Generate Prisma Client
+        run: npx prisma generate
+
+      - name: Run Build
+        run: npm run build
+        env:
+          # Resend needs the re_ prefix and a long string
+          RESEND_API_KEY: "re_1234567890abcdefghijklmnopqrstuv"
+          # Clerk needs a longer, properly formatted mock key to bypass validation
+          NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY: "pk_test_Y2xlcmsuYWJjZGVmZ2hpamtsbW5vcHFyc3R1dnd4eXouZGV2JA"
+          CLERK_SECRET_KEY: "sk_test_1234567890abcdefghijklmnopqrstuv"
+          DATABASE_URL: "postgresql://mock:mock@localhost:5432/mock"
+          NEXT_PUBLIC_VAPI_ASSISTANT_ID: "mock_assistant"
+          NEXT_PUBLIC_VAPI_API_KEY: "mock_vapi"
+          ADMIN_EMAIL: "admin@test.com"
+          NEXT_PUBLIC_APP_URL: "http://localhost:3000"
+
+
+
