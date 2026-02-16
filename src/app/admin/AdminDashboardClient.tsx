@@ -9,6 +9,7 @@ import { useGetDoctors } from "@/hooks/use-doctors";
 import { useUser } from "@clerk/nextjs";
 import { SettingsIcon } from "lucide-react";
 
+// AdminDashboardClient component fetches and manages data for the admin dashboard,
 function AdminDashboardClient() {
   const { user } = useUser();
   const { data: doctors = [], isLoading: doctorsLoading } = useGetDoctors();
